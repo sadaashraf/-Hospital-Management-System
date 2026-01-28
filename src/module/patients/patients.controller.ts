@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -32,8 +32,9 @@ export class PatientsController {
   }
 
   @Get()
-  findAll() {
-    return this.patientsService.findAll();
+  findAll(@Query() query: any) {
+    console.log('Query params:', query);
+    return this.patientsService.findAll(query);
   }
 
   @Get(':id')

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,19 +20,54 @@ export class PatientsService {
     return this.patientRepo.save(patient);
   }
 
-  findAll() {
-    return `This action returns all patients`;
+  async findAll(query: any = {}) {
+    const { search, gender, status } = query;
+    const qb = this.patientRepo.createQueryBuilder("patient");
+
+    if (search) {
+      qb.andWhere(
+        "(patient.firstName ILIKE :search OR patient.lastName ILIKE :search)",
+        { search: `%${search}%` },
+      );
+    }
+
+    if (gender) qb.andWhere("patient.gender = :gender", { gender });
+    if (status) qb.andWhere("patient.status = :status", { status });
+
+    return qb.orderBy("patient.createdAt", "DESC").getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  async findOne(id: number) {
+    try {
+      const patient = await this.patientRepo.findOneBy({ id });
+      if (patient) {
+        return patient;
+      }
+      throw new NotFoundException("id not found");
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
+  async update(id: number, updatePatientDto: UpdatePatientDto) {
+    try {
+      const patient = await this.patientRepo.findOneBy({ id })
+      if (!patient) {
+        throw new NotFoundException("id not found");
+      }
+      Object.assign(patient, updatePatientDto)
+      return this.patientRepo.save(patient)
+    } catch (error) {
+      throw error;
+    }
+
   }
 
   remove(id: number) {
-    return `This action removes a #${id} patient`;
+    this.patientRepo.delete({ id });
+    return {
+      status: "ok",
+      message: "delete successful"
+    };
   }
 }
