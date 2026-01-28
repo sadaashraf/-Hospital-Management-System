@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class PatientsService {
-
   constructor(@InjectRepository(Patient)
   private readonly patientRepo: Repository<Patient>
   ) { }
@@ -63,6 +62,7 @@ export class PatientsService {
 
   }
 
+
   remove(id: number) {
     this.patientRepo.delete({ id });
     return {
@@ -71,3 +71,15 @@ export class PatientsService {
     };
   }
 }
+
+
+// async updateImage(id: string, image: string) {
+//   const patient = await this.patientRepo.findOne({ where: { id: +id } });
+
+//   if (!patient) {
+//     throw new NotFoundException("Patient not found");
+//   }
+
+//   patient.image = image;
+//   return this.patientRepo.save(patient);
+// }
