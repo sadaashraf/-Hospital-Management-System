@@ -9,11 +9,11 @@ import {
 
 @Entity("patients")
 export class Patient {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  // @Column({ unique: true })
-  // patientCode: string;
+  @Column({ unique: true, nullable: true })
+  patientCode: string;
 
   // ===== Personal Info =====
   @Column()
@@ -25,7 +25,7 @@ export class Patient {
   @Column({ type: "date" })
   dateOfBirth: Date;
 
-  @Column()
+  @Column({ nullable: true })
   gender: string;
 
   @Column({ nullable: true })
@@ -93,11 +93,11 @@ export class Patient {
   updatedAt: Date;
 
   // ===== Generate patient code automatically =====
-  // @BeforeInsert()
-  // generatePatientCode() {
-  //   // Example: P-20260127-8372
-  //   const randomNum = Math.floor(1000 + Math.random() * 9000);
-  //   const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  //   this.patientCode = `P-${datePart}-${randomNum}`;
-  // }
+  @BeforeInsert()
+  generatePatientCode() {
+    // Example: P-20260127-8372
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    this.patientCode = `P-${datePart}-${randomNum}`;
+  }
 }

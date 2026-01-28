@@ -15,7 +15,7 @@ export class PatientsService {
   create(createPatientDto: CreatePatientDto, file: Express.Multer.File) {
     const patient = this.patientRepo.create({
       ...createPatientDto,
-      image: file.filename
+      image: file?.filename,
     });
     return this.patientRepo.save(patient);
   }
