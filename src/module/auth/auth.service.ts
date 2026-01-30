@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from '../user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
 
-  }
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
+    private jwtService: JwtService,
+  ) { }
 
-  findAll() {
-    return
-  }
+  async login(email: string, password: string) {
+    const user = await this.userRepo.findOne({ where: { email } });
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    if (!user) {
+      throw new UnauthorizedException('Invalid user');
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const isPasswordCorrect = password === user.password;
+    if (!isPasswordCorrect) {
+      throw new UnauthorizedException('Invalid password');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    const payload = {
+      id: user.id,
+      role: user.role,
+      email: user.email,
+    };
+
+    return {
+      success: true,
+      message: 'login successful',
+      access_token: this.jwtService.sign(payload),
+      role: user.role,
+    };
   }
 }
