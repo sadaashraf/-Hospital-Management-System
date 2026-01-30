@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, ForbiddenException } from "@nestjs/commo
 
 export class roleGuard implements CanActivate {
   constructor(
-    private readonly role: string
+    private readonly role: string[]
   ) {
     this.role = role;
   }

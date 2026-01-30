@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Query, NotFoundException, UseGuards } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { roleGuard } from '../auth/strategy/role.Guard';
 
 @Controller('patients')
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) { }
 
+  // @UseGuards(new roleGuard(['doctor', 'Receptionist']))
   @Post()
   @UseInterceptors(
     FileInterceptor("image", {
