@@ -45,14 +45,14 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepo.findOneBy({ id });
 
-    if (!user) { throw new NotFoundException('user not found') }
+    if (!user) { throw new NotFoundException('user is not found') }
     Object.assign(user, updateUserDto);
     return this.userRepo.save(user);
   }
 
   async remove(id: number) {
     const user = this.userRepo.findOneBy({ id });
-    if (!user) { throw new NotFoundException('user not found') }
+    if (!user) { throw new NotFoundException('user is not found') }
     await this.userRepo.delete(id);
     return {
       status: "ok",

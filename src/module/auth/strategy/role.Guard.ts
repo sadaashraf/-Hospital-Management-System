@@ -10,7 +10,6 @@ export class RoleGuard implements CanActivate {
     if (user && this.roles.includes(user.role)) {
       return true; // user ka role match ho gaya
     }
-
     throw new ForbiddenException('role not defined');
   }
 }
