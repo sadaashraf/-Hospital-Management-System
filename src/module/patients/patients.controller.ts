@@ -5,13 +5,13 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { roleGuard } from '../auth/strategy/role.Guard';
+import { RoleGuard } from '../auth/strategy/role.Guard';
 
 @Controller('patients')
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) { }
 
-  // @UseGuards(new roleGuard(['doctor', 'Receptionist']))
+  @UseGuards(new RoleGuard(['doctor', 'Receptionist']))
   @Post()
   @UseInterceptors(
     FileInterceptor("image", {
@@ -60,37 +60,3 @@ export class PatientsController {
     return this.patientsService.remove(+id);
   }
 }
-
-// @Patch("update-image/:id")
-// @UseInterceptors(
-//   FileInterceptor("image", {
-//     storage: diskStorage({
-//       destination: "./public/uploads",
-//       filename: (req, file, cb) => {
-//         const uniqueName =
-//           Date.now() + "-" + Math.round(Math.random() * 1e9);
-//         cb(null, uniqueName + extname(file.originalname));
-//       },
-//     }),
-//     fileFilter: (req, file, cb) => {
-//       if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-//         return cb(new Error("Only image files allowed"), false);
-//       }
-//       cb(null, true);
-//     },
-//     limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
-//   }),
-// )
-// async updateImage(
-//   @Param("id") id: string,
-//   @UploadedFile() file: Express.Multer.File,
-// ) {
-//   if (!file) {
-//     throw new NotFoundException("Image file not found");
-//   }
-
-//   return this.patientsService.updateImage(id, file.filename);
-// }
-
-
-

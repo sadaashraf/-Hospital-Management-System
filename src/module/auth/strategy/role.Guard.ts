@@ -1,18 +1,16 @@
 import { CanActivate, ExecutionContext, ForbiddenException } from "@nestjs/common";
 
-export class roleGuard implements CanActivate {
-  constructor(
-    private readonly role: string[]
-  ) {
-    this.role = role;
-  }
-  canActivate(
-    context: ExecutionContext): boolean {
+export class RoleGuard implements CanActivate {
+  constructor(private readonly roles: string[]) { }
+
+  canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    if (user && user.role === this.role) {
-      return true;
+
+    if (user && this.roles.includes(user.role)) {
+      return true; // user ka role match ho gaya
     }
+
     throw new ForbiddenException('role not defined');
   }
 }

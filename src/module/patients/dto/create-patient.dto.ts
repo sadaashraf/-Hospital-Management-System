@@ -24,8 +24,8 @@ export class CreatePatientDto {
   @IsString()
   maritalStatus?: string;
 
-  @IsString()
-  image?: string;
+  // @IsString()
+  // image?: string;
 
   @IsString()
   phone: string;
