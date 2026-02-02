@@ -6,12 +6,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { RoleGuard } from '../auth/strategy/role.Guard';
+import { ApiSecurity } from '@nestjs/swagger';
 
 @Controller('patients')
+@ApiSecurity('JWT_Auth')
+
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) { }
 
-  @UseGuards(new RoleGuard(['doctor', 'Receptionist']))
+  @UseGuards(new RoleGuard(['DOCTOR', 'RECEPTIONIST']))
   @Post()
   @UseInterceptors(
     FileInterceptor("image", {

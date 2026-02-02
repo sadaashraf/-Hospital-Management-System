@@ -14,7 +14,8 @@ import { AuthModule } from './module/auth/auth.module';
     TypeOrmModule.forRootAsync(databaseConfig),
     PatientsModule,
     UserModule,
-    AuthModule
+    AuthModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
