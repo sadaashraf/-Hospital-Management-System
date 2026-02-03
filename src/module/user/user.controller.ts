@@ -12,7 +12,7 @@ export class UserController {
 
   constructor(private readonly userService: UserService) { }
 
-  @UseGuards(new RoleGuard(['DOCTOR']))
+  @UseGuards(new RoleGuard(['ADMIN']))
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
