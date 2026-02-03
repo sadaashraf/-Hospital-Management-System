@@ -26,6 +26,10 @@ export class Doctor {
   @Column({ default: true })
   isActive: boolean;
 
+  @OneToMany(() => Appointment, appointment => appointment.doctor)
+  appointments: Appointment[];
+
   @CreateDateColumn()
   createdAt: Date;
+
 }

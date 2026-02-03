@@ -1,3 +1,4 @@
+import { Appointment } from "src/module/appointment/entities/appointment.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from "typeorm";
 
 @Entity("patients")
@@ -100,4 +102,8 @@ export class Patient {
     const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     this.patientCode = `P-${datePart}-${randomNum}`;
   }
+
+  // ===== Relations =====
+  @OneToMany(() => Appointment, appointment => appointment.patient)
+  appointments: Appointment[];
 }
