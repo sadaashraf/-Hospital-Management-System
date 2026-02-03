@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Repository } from 'typeorm';
@@ -40,18 +40,55 @@ export class AppointmentService {
   }
 
   findAll() {
-    return `This action returns all appointment`;
+    return this.appointmentRepo.find({
+      order: { createdAt: 'DESC' },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} appointment`;
+    const appointment = this.appointmentRepo.findOne({
+      where: { id },
+      relations: ['patient', 'doctor'],
+    });
+
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    return appointment;
   }
 
-  update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
-    return `This action updates a #${id} appointment`;
+  async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
+    const appointment = await this.appointmentRepo.findOneBy({ id });
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    Object.assign(appointment, updateAppointmentDto);
+    return this.appointmentRepo.save(appointment);
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} appointment`;
+  findToday() {
+    const today = new Date().toISOString().split('T')[0];
+    return this.appointmentRepo.find({
+      where: { appointmentDate: today },
+    });
+  }
+
+  async updateStatus(id: number, status: any) {
+    const appointment = await this.appointmentRepo.findOne({
+      where: { id },
+    });
+    if (!appointment) throw new NotFoundException('Appointment not found');
+
+    appointment.status = status;
+    return this.appointmentRepo.save(appointment);
+  }
+
+  async remove(id: number) {
+    const appointment = await this.appointmentRepo.findOneBy({ id });
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found');
+    }
+    return this.appointmentRepo.delete(id);
   }
 }

@@ -1,9 +1,11 @@
 
+import { Appointment } from 'src/module/appointment/entities/appointment.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('doctors')

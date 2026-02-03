@@ -7,6 +7,8 @@ import { databaseConfig } from './config/database.config';
 import { PatientsModule } from './module/patients/patients.module';
 import { UserModule } from './module/user/user.module';
 import { AuthModule } from './module/auth/auth.module';
+import { DoctorModule } from './module/doctor/doctor.module';
+import { AppointmentModule } from './module/appointment/appointment.module';
 
 @Module({
   imports: [
@@ -15,7 +17,8 @@ import { AuthModule } from './module/auth/auth.module';
     PatientsModule,
     UserModule,
     AuthModule,
-
+    DoctorModule,
+    AppointmentModule
   ],
   controllers: [AppController],
   providers: [AppService],
