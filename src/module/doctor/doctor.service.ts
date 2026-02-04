@@ -31,7 +31,7 @@ export class DoctorService {
 
   async update(id: number, updateDoctorDto: UpdateDoctorDto) {
     const doctor = await this.doctorRepo.findOne({ where: { id } });
-    if (!doctor) throw new NotFoundException('Doctor not found');
+    if (!doctor) throw new NotFoundException('Doctor id not found');
 
     Object.assign(doctor, updateDoctorDto);
     return this.doctorRepo.save(doctor);
