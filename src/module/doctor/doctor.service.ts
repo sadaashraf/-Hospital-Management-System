@@ -39,7 +39,13 @@ export class DoctorService {
 
   async remove(id: number) {
     const doctor = await this.doctorRepo.findOne({ where: { id } });
-    if (!doctor) throw new NotFoundException('Doctor id not found');
-    return this.doctorRepo.remove(doctor);
+    if (!doctor) {
+      throw new NotFoundException('Doctor id not found');
+    }
+    await this.doctorRepo.remove(doctor);
+    return {
+      status: "ok",
+      message: "Delete successful",
+    };
   }
 }
